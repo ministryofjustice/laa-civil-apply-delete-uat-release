@@ -13,6 +13,8 @@ inputs:
   k8s_token:
     description: "Kubernetes authentication token"
     required: true
+  release_name_prefix:
+    required: false
 outputs:
   branch-name:
     description: "Extracted branch name"
@@ -46,7 +48,8 @@ runs:
       run: |
         branch=${{ steps.extract_branch.outputs.branch }}
         truncated_branch=$(echo $branch | tr '[:upper:]' '[:lower:]' | sed 's:^\w*\/::' | tr -s ' _/[]().' '-' | cut -c1-30 | sed 's/-$//')
-        echo "##[set-output name=release;]$(echo "apply-${truncated_branch}")"
+        prefix=${{ inputs.release_name_prefix }}
+        echo "##[set-output name=release;]$(echo "${prefix}${truncated_branch}")"
 
     - name: Authenticate to the cluster
       id: authenticate_to_cluster
