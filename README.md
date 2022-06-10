@@ -24,11 +24,25 @@ on:
     steps:
       - uses: actions/checkout@v3
       - name: Delete UAT release action
-        uses: ./.github/actions/delete-uat-release
+        uses: uses: ministryofjustice/laa-civil-apply-delete-uat-release@v1.0.0
         with:
           k8s_cluster: ${{ secrets.K8S_CLUSTER }}
           k8s_cluster_cert: ${{ secrets.K8S_CLUSTER_CERT }}
           k8s_namespace: ${{ secrets.K8S_NAMESPACE }}
           k8s_token: ${{ secrets.K8S_TOKEN }}
 ```
+
+## Secrets
+You will need to provide Github action secrets, `settings > secrets > actions` for accessing the kubernetes cluster. You can name them
+whatever you like and then supply them to the `action` using the `with` option:
+
+```
+  with:
+    k8s_cluster: ${{ secrets.MY_CLUSTER }}
+    k8s_cluster_cert: ${{ secrets.MY_CLUSTER_CERT }}
+    k8s_namespace: ${{ secrets.MY_NAMESPACE }}
+    k8s_token: ${{ secrets.MY_TOKEN }}
+```
+
+Note that none of them are expected to be base64 encoded
 
