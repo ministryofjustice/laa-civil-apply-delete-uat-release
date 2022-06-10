@@ -6,7 +6,7 @@ for deleting an apply service PRs UAT release.
 ## Prerequsites and assumptions:
 
 - github secrets containing kubernetes credentials for the cluster
-- assumes a certain name for UAT release (see deploy script)
+- assumes a certain naming mechanism for UAT release (see deploy script)
 
 ## Workflow example: delete a UAT release when PR on merge
 
