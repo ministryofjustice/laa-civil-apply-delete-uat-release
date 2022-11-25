@@ -11,6 +11,7 @@ for deleting an apply service PRs UAT release.
 ## Workflow example: delete a UAT release when PR on merge
 
 ```yml
+# minimal example that deletes only on branch merge
 name: Delete UAT release on PR merge
 
 on:
@@ -24,12 +25,40 @@ on:
     steps:
       - uses: actions/checkout@v3
       - name: Delete UAT release action
-        uses: uses: ministryofjustice/laa-civil-apply-delete-uat-release@v1.0.0
+        uses: ministryofjustice/laa-civil-apply-delete-uat-release@v1.0.0
         with:
           k8s_cluster: ${{ secrets.K8S_CLUSTER }}
           k8s_cluster_cert: ${{ secrets.K8S_CLUSTER_CERT }}
           k8s_namespace: ${{ secrets.K8S_NAMESPACE }}
           k8s_token: ${{ secrets.K8S_TOKEN }}
+```
+
+```yml
+# real world example for deletes on branch merge and close, with output
+# This also supplies the custom release prefix that will be used to
+# identify the release to delete
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  delete_uat_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Delete UAT release action
+        id: delete_uat
+        uses: ministryofjustice/laa-civil-apply-delete-uat-release@v1.0.0
+        with:
+          release_name_prefix: "apply-"
+          k8s_cluster: ${{ secrets.K8S_GHA_UAT_CLUSTER_NAME }}
+          k8s_cluster_cert: ${{ secrets.K8S_GHA_UAT_CLUSTER_CERT }}
+          k8s_namespace: ${{ secrets.K8S_GHA_UAT_NAMESPACE }}
+          k8s_token: ${{ secrets.K8S_GHA_UAT_TOKEN }}
+      - name: Result
+        shell: bash
+        run: echo ${{ steps.delete_uat.outputs.delete-message }}
 ```
 
 ## Secrets
