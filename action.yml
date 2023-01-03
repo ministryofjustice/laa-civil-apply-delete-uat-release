@@ -18,10 +18,10 @@ inputs:
 outputs:
   branch-name:
     description: "Extracted branch name"
-    value: ${{ steps.extract_branch.outputs.branch }}
+    value: ${{ steps.extract_branch.outputs.branch_name }}
   release-name:
     description: "Extracted release name"
-    value: ${{ steps.extract_release.outputs.release }}
+    value: ${{ steps.extract_release.outputs.release_name }}
   delete-message:
     description: "Extracted release name"
     value: ${{ steps.delete_release.outputs.message }}
