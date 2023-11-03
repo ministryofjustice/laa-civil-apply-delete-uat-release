@@ -76,7 +76,7 @@ runs:
 
         if [[ ! -z "$found" ]]
         then
-          helm delete $release_name
+          helm delete $release_name --debug
           echo "message=$(echo "Deleted UAT release ${release_name}!")" >> $GITHUB_OUTPUT
         else
           echo "message=$(echo "UAT release, ${release_name}, not found!")" >> $GITHUB_OUTPUT
