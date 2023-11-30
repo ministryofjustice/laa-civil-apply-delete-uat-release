@@ -8,6 +8,17 @@ for deleting an apply service PRs UAT release.
 - github secrets containing kubernetes credentials for the cluster
 - assumes a certain naming mechanism for UAT release (see deploy script)
 
+## Inputs
+
+| Input               | Description                                                                     |
+|---------------------|---------------------------------------------------------------------------------|
+| release_name_prefix | custom release prefix for the release name to be deleted                        |
+| delete_all_pvc      | `true` to delete all persistenvolumeclaims (PVCs) for any installed helm charts |
+| k8s_cluster         | k8s cluster name                                                                |
+| k8s_cluster_cert    | k8s authentication certificate                                                  |
+| k8s_namespace       | k8s namespace in cluster                                                        |
+| k8s_token           | k8s authentication token                                                        |
+
 ## Workflow example: delete a UAT release when PR on merge
 
 ```yml
@@ -34,9 +45,11 @@ on:
 ```
 
 ```yml
-# real world example for deletes on branch merge and close, with output
-# This also supplies the custom release prefix that will be used to
-# identify the release to delete
+# Real world example for deletes on branch merge and close, with output
+# This also supplies:
+#   - a the custom release prefix that will be used to identify the release to delete
+#   - flag to delete all persistenvolumeclaims (PVCs) for any installed helm charts
+#
 on:
   pull_request:
     types:
@@ -52,6 +65,7 @@ jobs:
         uses: ministryofjustice/laa-civil-apply-delete-uat-release@v1.0.0
         with:
           release_name_prefix: "apply-"
+          delete_all_pvc: true
           k8s_cluster: ${{ secrets.K8S_GHA_UAT_CLUSTER_NAME }}
           k8s_cluster_cert: ${{ secrets.K8S_GHA_UAT_CLUSTER_CERT }}
           k8s_namespace: ${{ secrets.K8S_GHA_UAT_NAMESPACE }}
