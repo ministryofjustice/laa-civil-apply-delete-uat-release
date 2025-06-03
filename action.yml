@@ -76,12 +76,17 @@ runs:
         DELETE_ALL_PVC: ${{ inputs.delete_all_pvc }}
         K8S_NAMESPACE: ${{ inputs.k8s_namespace }}
       run: |
+        set -x
         release_name=${{ steps.extract_release.outputs.release_name }}
         found=$(helm list -n "$K8S_NAMESPACE" --all | grep $release_name || [[ $? == 1 ]])
 
         if [[ ! -z "$found" ]]
         then
-          helm delete $release_name -n "$K8S_NAMESPACE"
+          helm delete $release_name -n "$K8S_NAMESPACE"|| {
+            echo "Helm delete failed:"
+            helm status "$release_name" -n "$K8S_NAMESPACE" || echo "No status available"
+            exit 1
+          }
 
           if [[ "${DELETE_ALL_PVC}" = "true" ]]
           then
